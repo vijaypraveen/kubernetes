@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  labels:
+    type: db
+spec:
+  selector:
+    matchLabels:
+      type: hello-db
+      service: database
+  template:
+    metadata:
+      labels:
+        type: hello-db
+        service: database
+        db: mongo
+    spec:
+      containers:
+      - name: db
+        image: mongo:3.3
+        env:
+        - name: DB
+          value: localhost
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+spec:
+  type: ClusterIP
+  ports:
+  - port: 27017
+  selector:
+    type: hello-db
+    service: database

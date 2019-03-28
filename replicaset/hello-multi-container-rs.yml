@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: hello
+  labels:
+    type: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      type: hello-app
+      service: application
+  template:
+    metadata:
+      labels:
+        type: hello-app
+        service: application
+        db: mongo
+    spec:
+      containers:
+      - name: hello
+        image: hello:v1
+        imagePullPolicy: Never
+        name: hello
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      - name: db
+        image: mongo:3.3
+        env:
+        - name: DB
+          value: localhost
